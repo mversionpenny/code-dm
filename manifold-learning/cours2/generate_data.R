@@ -2,20 +2,22 @@
 #----------------- Manifold Learning ------------------
 #------------------ 15 oct. 2016 ----------------------
 
-
+#install.packages("plot3D")
+#install.packages("rgl")
 library(rgl)
 library(plot3D)
 observationsNum <- 10000
+noise <- 0.05
 
 
 #### Swiss ROll
 #TODO : title to the plot + comments
 
-swissroll <- function(n){
+swissroll <- function(n,noise){
   p <- runif(n)
   q <- runif(n)
   t <- 3*pi/2 * (1 + 2*p)
-  X <- cbind(t*cos(t), t*sin(t), 30*q)
+  X <- cbind(t*cos(t), t*sin(t), 30*q) + noise * runif(n)
 
   x <- t(X[,1])
   y <- t(X[,2])
@@ -23,7 +25,7 @@ swissroll <- function(n){
   par(mfrow = c(1, 2))
   scatter3D(x,y,z, phi= 80, theta=90) 
   scatter3D(x,y,z, phi= 40, theta=90) 
-  plot3D(x,y,z, type="p",aspect =TRUE,col=rainbow(5))
+  plot3d(x,y,z, type="p",aspect =TRUE,col=rainbow(5))
   
   return(X)
 }
