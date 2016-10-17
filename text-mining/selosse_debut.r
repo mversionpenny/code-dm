@@ -105,6 +105,7 @@ length(rownames(std_tdm2))
 
 #4.
 #install.packages("wordcloud")
+#install.packages("RColorBrewer")
 library(wordcloud)
 library(RColorBrewer)
 #getting only 100 most freqent words (at beginning, repeating ex3) :
