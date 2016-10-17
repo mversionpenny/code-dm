@@ -76,7 +76,7 @@ sorted<- sort(sums,decreasing = TRUE)
 plot(sorted[1:50], type = 'h') #"fast way" : can be improved
 barplot(sorted[1:50], type = 'h', las=2)
 
-# Ex4. Prétraitements supplémentaires
+# Ex4. Prétraitements supplémentaires ####
 #1.
 #removing numbers
 book_corpus <- tm_map(book_corpus, removeNumbers)
