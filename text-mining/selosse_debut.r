@@ -96,6 +96,33 @@ sorted<- sort(sums,decreasing = TRUE)
 barplot(sorted[1:50], type = 'h', las=2)
 
 #2.not sure about this part --> ask teacher
-tdm2 <- removeSparseTerms(tdm, 0.99)
+tdm2 <- removeSparseTerms(tdm, 0.98)
 std_tdm2 <- as.matrix(tdm2)
 length(rownames(std_tdm2))
+
+#3. Not sure in this context it is really helping :
+# sparsity of tdm2 = 0.98 while sparsity of tdm = 100%
+
+#4.
+#install.packages("wordcloud")
+library(wordcloud)
+library(RColorBrewer)
+#getting only 100 most freqent words (at beginning, repeating ex3) :
+tdm <- TermDocumentMatrix(book_corpus)
+std_tdm <- as.matrix(tdm)
+sums <- rowSums(std_tdm)
+sorted <-sort(sums, decreasing =TRUE)
+wordcloud(sorted[1:100])
+#/!\doesn't work because of type of the result of rowSums!!
+# -->ask teacher how Icould do that!
+# meanwhile : 
+temp <- inspect(tdm)
+indexes <- which(rowSums(temp)>9)
+FreqMat <- data.frame(terms = rownames(temp)[indexes], Freq = rowSums(temp)[indexes])
+wordcloud(FreqMat$terms,FreqMat$Freq)
+#if error : "queequeg could not be fit on page. It will not be plotted." --> increase size of plot
+# with colors :
+colors <- brewer.pal(4,"Paired")
+wordcloud(FreqMat$terms,FreqMat$Freq, random.color = TRUE, colors=colors)
+
+
