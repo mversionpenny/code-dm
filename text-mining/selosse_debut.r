@@ -14,7 +14,7 @@ library(tm)
 #gutenberg_id = moby_dick_data$gutenberg_id
 #book <- gutenberg_download(gutenberg_id)
 
-#load "Moby Dick"
+#load "Moby Dick" /!\ if warning "incomplete final line" --> go to site an fill captcha
 book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
 #to know how many lines were loaded:
 length(book)
