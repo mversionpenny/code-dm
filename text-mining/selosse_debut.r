@@ -8,6 +8,7 @@
 #includes libraries we need
 library(dplyr)
 library(gutenbergr)
+library(NLP)
 library(tm)
 
 #book_data <- gutenberg_works(title == "Moby Dick")

@@ -14,22 +14,22 @@ book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
 #take only the first 5000 lines:
 book <- book[1:5000]
 #change it to a "corpus" object :
-book_corpus <- VCorpus(VectorSource(book))
+book.corpus <- VCorpus(VectorSource(book))
 
 ### changing corpus ###
 # to lower case
-book_corpus <- tm_map(book_corpus, content_transformer(tolower))
+book.corpus.processed <- tm_map(book.corpus, content_transformer(tolower))
 # get rid of punctuation
-book_corpus <- tm_map(book_corpus, removePunctuation)
+book.corpus.processed <- tm_map(book.corpus.processed, removePunctuation)
 # remove numbers
-book_corpus <- tm_map(book_corpus, removeNumbers)
+book.corpus.processed <- tm_map(book.corpus.processed, removeNumbers)
 # remove stop-words ("the" "are" ...)
-book_corpus <- tm_map(book_corpus, removeWords,stopwords("SMART"))
+book.corpus.processed <- tm_map(book.corpus.processed, removeWords,stopwords("SMART"))
 # stemming words (eg evaluation ==> evaluat)
-book_corpus <- tm_map(book_corpus, stemDocument)
+book.corpus.processed <- tm_map(book.corpus.processed, stemDocument)
 
 ### creating TermDocumentMatrix ###
-tdm <- TermDocumentMatrix(book_corpus, control=list(weighting=weightTfIdf))
+tdm <- TermDocumentMatrix(book.corpus.processed, control=list(weighting=weightTfIdf))
 #/!\"Warning message:In weighting(x) :empty document(s): 2 7 8 10 ..."--> ask teacher 
 
 #2.
@@ -39,3 +39,24 @@ tdm <- TermDocumentMatrix(book_corpus, control=list(weighting=weightTfIdf))
 #3.
 findFreqTerms(tdm,20)
 # stemming cut words
+
+#4.
+printdoc <- function(tdm, doc_vec){
+  terms <- inspect(tdm[,doc_vec]);
+  indexes <- which(rowSums(terms) > 0)
+  result <- inspect(tdm[indexes,doc_vec])
+  return(result)
+}
+
+#5.
+printdoc_raw <- function(original_corpus,doc_vec){
+  #unlist does a vector
+  unlist(lapply(original_corpus[doc_vec]$content, as.character))
+}
+
+# Ex. 6 Mon premier moteur de recherche (formuler une requête)
+
+
+
+
+
