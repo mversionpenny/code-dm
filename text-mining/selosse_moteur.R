@@ -10,7 +10,8 @@ library(tm)
 library(SnowballC)
 
 #load "Moby Dick"
-book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
+#book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
+book <- book[!(is.na(book) | book=="")]
 #take only the first 5000 lines:
 book <- book[1:5000]
 #change it to a "corpus" object :
@@ -24,7 +25,7 @@ book.corpus.processed <- tm_map(book.corpus.processed, removePunctuation)
 # remove numbers
 book.corpus.processed <- tm_map(book.corpus.processed, removeNumbers)
 # remove stop-words ("the" "are" ...)
-book.corpus.processed <- tm_map(book.corpus.processed, removeWords,stopwords("SMART"))
+book.corpus.processed <- tm_map(book.corpus.processed, removeWords,stopwords("english"))
 # stemming words (eg evaluation ==> evaluat)
 book.corpus.processed <- tm_map(book.corpus.processed, stemDocument)
 
@@ -49,6 +50,7 @@ printdoc <- function(tdm, doc_vec){
 }
 
 #5.
+# ex : printdoc_raw(book.corpus, c(63,23,96))
 printdoc_raw <- function(original_corpus,doc_vec){
   #unlist does a vector
   unlist(lapply(original_corpus[doc_vec]$content, as.character))
@@ -62,7 +64,12 @@ cosine <- function(vec1,vec2){
   scalar <- sum(vec1 * vec2)
   # then the product of the norms
   norm_product <- norm(vec1, type="2") * norm(vec2, type="2")
-  return(scalar/norm_product)
+  if(norm_product == 0){
+    return(0)
+  }
+  else{
+    return(scalar/norm_product)
+  }
 }
 
 #2.
@@ -83,9 +90,21 @@ query2vector <- function(m,q){
 
 #3.
 # returns a sorted list of documents regarding their cosinus similarity ith the qury
-run_query <- function(query, m){
-  
+# ex : test <- run_query(m,c("whale","captain"))
+run_query <- function(m, query){
+  query_vector <- query2vector(m, query)
+  cosinus <- numeric(dim(m)[2])
+  for (i in seq_along(1:dim(m)[2])) {
+    cosinus[i] <- cosine(query_vector,m[,i])
+  }
+  cosinus <- sort(cosinus, decreasing = TRUE, index.return =TRUE)$ix
+  return(cosinus)
 }
 
+
+#4.
+words <- c("whale","captain") # can be whatever we want!
+test <- run_query(m,words)
+book[test[1:10]]
 
 
