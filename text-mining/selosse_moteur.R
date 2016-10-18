@@ -106,5 +106,5 @@ run_query <- function(m, query){
 words <- c("gutenberg","moby","sea") # can be whatever we want!
 test <- run_query(m,words)
 book[test[1:10]]
-
+#or : printdoc_raw(book.corpus, test[1:10])
 
