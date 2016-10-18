@@ -113,7 +113,7 @@ tdm <- TermDocumentMatrix(book_corpus)
 std_tdm <- as.matrix(tdm)
 sums <- rowSums(std_tdm)
 sorted <-sort(sums, decreasing =TRUE)
-wordcloud(sorted[1:100])
+wordcloud(names(sorted[1:10]), sorted[1:10])
 #/!\doesn't work because of type of the result of rowSums!!
 # -->ask teacher how Icould do that!
 # meanwhile : 
