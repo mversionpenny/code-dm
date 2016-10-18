@@ -1,6 +1,6 @@
 # Margot Selosse . text-mining : TP 1
 
-# Ex. 5 Mon premier moteur de recherche (préparation)
+# Ex. 5 Mon premier moteur de recherche (préparation) ####
 
 #1.
 #install.packages("SnowballC")
@@ -54,9 +54,38 @@ printdoc_raw <- function(original_corpus,doc_vec){
   unlist(lapply(original_corpus[doc_vec]$content, as.character))
 }
 
-# Ex. 6 Mon premier moteur de recherche (formuler une requête)
+# Ex. 6 Mon premier moteur de recherche (formuler une requête) ####
 
+#1.
+cosine <- function(vec1,vec2){
+  #we compute the scalar product of the two vectors
+  scalar <- sum(vec1 * vec2)
+  # then the product of the norms
+  norm_product <- norm(vec1, type="2") * norm(vec2, type="2")
+  return(scalar/norm_product)
+}
 
+#2.
+m <- as.matrix(tdm)
+# build a vector from the m matrix and the words q (given by user)
+query2vector <- function(m,q){
+  #initialisation
+  result <- integer(dim(m)[1])
+  # I think there is a vectorized way to do that : 
+  for (qtext in q) {
+    index <- which(rownames(m) == qtext)
+    if(length(index)>0){
+      result[index] = 1
+    }
+  }
+  return(result)
+}
+
+#3.
+# returns a sorted list of documents regarding their cosinus similarity ith the qury
+run_query <- function(query, m){
+  
+}
 
 
 
