@@ -103,7 +103,7 @@ run_query <- function(m, query){
 
 
 #4.
-words <- c("whale","captain") # can be whatever we want!
+words <- c("gutenberg","moby","sea") # can be whatever we want!
 test <- run_query(m,words)
 book[test[1:10]]
 
