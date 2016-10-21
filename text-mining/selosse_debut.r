@@ -43,7 +43,7 @@ inspect(tdm[c("whale"), 1:50])
 
 #3. 
 terms <- inspect(tdm[,20])
-which(terms == 1, arr.ind = TRUE)
+which(terms > 0, arr.ind = TRUE)
 
 #4.
 findFreqTerms(tdm,50)
