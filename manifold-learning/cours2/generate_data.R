@@ -75,7 +75,7 @@ helix <- function(n, noise){
 
 #### Twinpeaks ####
 
-twinpeaks <- function(n, noise){
+wrongTwinpeaks <- function(n, noise){
   p <- runif(n)
   q <- runif(n)
   X <- cbind(1-2*p, sin(pi - 2*pi*p), tanh(3 - 6*q)) + noise * rnorm(n)
@@ -88,6 +88,21 @@ twinpeaks <- function(n, noise){
   scatter3D(x,y,z, phi= 40, theta=90) 
   plot3d(x,y,z, type="p",aspect =TRUE,col=rainbow(5))
 
+  return(X)
+}
+
+twinpeaks <- function(n, noise){
+  p <- runif(n)
+  q <- runif(n)
+  X <- cbind(1-2*p, 1-2*q, sin(pi - 2*pi*p) * tanh(3 - 6*q)) + noise * rnorm(n)
+  x <- t(X[,1])
+  y <- t(X[,2])
+  z <- t(X[,3]*10)
+  par(mfrow = c(1, 2))
+  scatter3D(x,y,z, phi= 80, theta=90) 
+  scatter3D(x,y,z, phi= 40, theta=90) 
+  plot3d(x,y,z, type="p",aspect =TRUE,col=rainbow(5))
+  
   return(X)
 }
 
