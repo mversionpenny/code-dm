@@ -1,6 +1,6 @@
 # Margot Selosse . text-mining : TP 1
 
-# Ex. 5 Mon premier moteur de recherche (préparation) ####
+# Ex. 5 Mon premier moteur de recherche (preparation) ####
 
 #1.
 #install.packages("SnowballC")
@@ -10,7 +10,7 @@ library(tm)
 library(SnowballC)
 
 #load "Moby Dick"
-#book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
+book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
 book <- book[!(is.na(book) | book=="")]
 #take only the first 5000 lines:
 book <- book[1:5000]
