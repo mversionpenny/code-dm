@@ -1,4 +1,4 @@
-# based model learning. tp1. Margot Selosse
+# model-based learning. tp1. Margot Selosse
 
 data(iris)
 plot(iris[,1:4],col=iris$Species)
