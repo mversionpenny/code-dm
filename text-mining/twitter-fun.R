@@ -1,7 +1,7 @@
 # Text-mining class #
 # Margot Selosse #
 # TwitteR #
-# mclustDA #
+
 
 # download twitter package
 # install.packages("twitteR")
