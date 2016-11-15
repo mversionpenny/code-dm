@@ -132,6 +132,44 @@ HD <-function(n){
   t <- expand.grid(temp)
   X <- cbind(cos(t[,1]), tanh(3 * t[,2]), t[,1] + t[,3], t[,4] * sin(t[,2]), sin(t[,1] + t[,5]), t[,5] * cos(t[,2]), t[,5] + t[,4], t[,2], t[,3] * t[,4], t[,1])
   
+  par(mfrow = c(3,3))
+  plot(X[,1], X[,3])
+  plot(X[,10], X[,7])
+  plot(X[,2], X[,5])
+  plot(X[,5], X[,9])
+  plot(X[,9], X[,8])
+  plot(X[,1], X[,4])
+  plot(X[,2], X[,10])
+  plot(X[,3], X[,9])
+  plot(X[,4], X[,10])
+  
+  scatter3D(X[,1],X[,2],X[,3]) 
+  plot3d(X[,1],X[,2],X[,3], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,3],X[,4],X[,5]) 
+  plot3d(X[,3],X[,4],X[,5], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,5],X[,6],X[,7]) 
+  plot3d(X[,5],X[,6],X[,7], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,7],X[,8],X[,9]) 
+  plot3d(X[,7],X[,8],X[,9], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,10],X[,1],X[,2]) 
+  plot3d(X[,7],X[,8],X[,9], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,4],X[,6],X[,8]) 
+  plot3d(X[,7],X[,8],X[,9], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,2],X[,4],X[,7]) 
+  plot3d(X[,7],X[,8],X[,9], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,3],X[,7],X[,10]) 
+  plot3d(X[,7],X[,8],X[,9], type="p",aspect =TRUE,col=rainbow(5))
+  
+  scatter3D(X[,7],X[,8],X[,9]) 
+  plot3d(X[,7],X[,8],X[,9], type="p",aspect =TRUE,col=rainbow(5))
+  
   return(X)
 }
 
