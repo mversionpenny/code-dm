@@ -16,7 +16,7 @@ dim(Hitters)
 sum(is.na(Hitters))
 
 # subset selection :
-install.packages('leaps')
+# install.packages('leaps')
 library(leaps)
 regfit.full <- regsubsets(Salary~., Hitters)
 summary(regfit.full)
