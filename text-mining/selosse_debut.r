@@ -1,4 +1,4 @@
-# Margot Selosse :  TD Text Mining 1.
+# Margot Selosse :  TD Text Mining 1. part 1
 
 # Ex 1. Premier pas avec la librairie tm ####
 #this is something to do when the gutenbergr and tidyr packages are not on the machine :
@@ -10,13 +10,16 @@ library(dplyr)
 library(gutenbergr)
 library(NLP)
 library(tm)
+# TODO : /!\ change path 
+setwd("D:/master-DM/cours/text-mining/")
 
-#book_data <- gutenberg_works(title == "Moby Dick")
-#gutenberg_id = moby_dick_data$gutenberg_id
-#book <- gutenberg_download(gutenberg_id)
 
-#load "Moby Dick" /!\ if warning "incomplete final line" --> go to site an fill captcha
-book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt", encoding = "UTF-8")
+# load "Moby Dick" from internet  /!\ if warning "incomplete final line" --> go to site an fill captcha :
+# book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt", encoding = "UTF-8")
+
+# load "Moby Dick" from text file :
+book <- readLines("moby-dick.txt", encoding = "UTF-8")
+
 #to know how many lines were loaded:
 length(book)
 #take only the first 5000 lines:
@@ -68,13 +71,13 @@ rownames(std_tdm)
 
 #4.
 sums <- rowSums(std_tdm)
-#my way :
+# my first way :
 sorted <- sort(-sums)
-#better way :
+# much better way :
 sorted<- sort(sums,decreasing = TRUE)
 
 #5.
-plot(sorted[1:50], type = 'h') #"fast way" : can be improved
+plot(sorted[1:50], type = 'h') #my first "fast way" : can be improved
 barplot(sorted[1:50], type = 'h', las=2)
 
 # Ex4. Prétraitements supplémentaires ####
@@ -114,18 +117,9 @@ tdm <- TermDocumentMatrix(book_corpus)
 std_tdm <- as.matrix(tdm)
 sums <- rowSums(std_tdm)
 sorted <-sort(sums, decreasing =TRUE)
-wordcloud(names(sorted[1:10]), sorted[1:10])
-
-
-
-# meanwhile : 
-temp <- inspect(tdm)
-indexes <- which(rowSums(temp)>9)
-FreqMat <- data.frame(terms = rownames(temp)[indexes], Freq = rowSums(temp)[indexes])
-wordcloud(FreqMat$terms,FreqMat$Freq)
-#if error : "queequeg could not be fit on page. It will not be plotted." --> increase size of plot
-# with colors :
 colors <- brewer.pal(4,"Paired")
-wordcloud(FreqMat$terms,FreqMat$Freq, random.color = TRUE, colors=colors)
+wordcloud(names(sorted[1:20]), sorted[1:20], colors=colors)
+#if error : "queequeg could not be fit on page. It will not be plotted." --> increase size of plot
+
 
 

@@ -1,4 +1,4 @@
-# Margot Selosse . text-mining : TP 1
+# Margot Selosse :  TD Text Mining 1. part 2
 
 # Ex. 5 Mon premier moteur de recherche (preparation) ####
 
@@ -9,8 +9,11 @@ library(gutenbergr)
 library(tm)
 library(SnowballC)
 
-#load "Moby Dick"
-book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt")
+# load "Moby Dick" from internet  /!\ if warning "incomplete final line" --> go to site an fill captcha :
+# book <- readLines("http://www.gutenberg.org/cache/epub/2701/pg2701.txt", encoding = "UTF-8")
+
+# load "Moby Dick" from text file /!\ change path :
+book <- readLines("D:/master-DM/cours/text-mining/moby-dick.txt", encoding = "UTF-8")
 book <- book[!(is.na(book) | book=="")]
 #take only the first 5000 lines:
 book <- book[1:5000]
@@ -56,7 +59,7 @@ printdoc_raw <- function(original_corpus,doc_vec){
   unlist(lapply(original_corpus[doc_vec]$content, as.character))
 }
 
-# Ex. 6 Mon premier moteur de recherche (formuler une requête) ####
+# Ex. 6 Mon premier moteur de recherche (formuler une requete) ####
 
 #1.
 cosine <- function(vec1,vec2){

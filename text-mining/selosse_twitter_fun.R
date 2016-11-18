@@ -9,6 +9,8 @@ library(twitteR)
 library(tm)
 library(wordcloud)
 library(RColorBrewer)
+# TODO : change path!
+setwd("D:/master-DM/cours/text-mining/")
 
 #### initialization ####
 
@@ -18,12 +20,13 @@ accessURL <- " https://api.twitter.com/oauth/access_token"
 authURL <- "https://api.twitter.com/oauth/authorize"
 # Handshake Object"
 setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
+# Note to the teacher : the csv I created is in the archive, you can directly read it
 tweets <- searchTwitter('#jillstein', n=1000)
 tweets.df <- do.call(rbind, lapply(tweets, as.data.frame))
-write.csv(tweets.df, "D:/test.csv")
+write.csv(tweets.df, "twitter.csv")
 
 # Creating a corpus : 
-tweets.text <- read.csv("D:/test.csv")
+tweets.text <- read.csv("twitter.csv")
 tweets.text <- tweets.text$text
 length(tweets.text)
 tweets.corpus <- VCorpus(VectorSource(tweets.text))
