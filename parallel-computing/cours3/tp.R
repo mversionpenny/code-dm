@@ -134,3 +134,18 @@ pred.bag.diamonds <- predict(tree.bag.diamonds, newdata = diamonds[-train,])
 idx_cut <- which(colnames(diamonds)=="cut")
 reality <- as.matrix(diamonds[-train,idx_cut])
 table(reality, pred.bag.diamonds)
+
+
+# problem with this code -> how do I parallelize it ?!
+# clue -> use the "tree" function and realize bagging by myself
+library(doParallel)
+library(foreach)
+library(randomForest) # else the cmobine function won't be recognize
+cl <- makeCluster(4)
+clusterExport(cl, list("randomForest"))
+registerDoParallel(cl)
+rf <- foreach(ntree=rep(250,4), .combine=combine) %dopar%
+  randomForest(cut~., data = diamonds[train,], ntree=ntree) # forced to take only ttrain, else :  <simpleError: cannot allocate vector of size 156.6 Mb>
+rf
+stopCluster(cl)
+
