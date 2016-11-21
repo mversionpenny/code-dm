@@ -111,6 +111,8 @@ res <- parLapply(cl,1:2000, fun = function(i) {
 
 stopCluster(cl)
 
+# /!\ Not ok because of seeds :S --> see seeds handling in correction
+
 #### ex. 3 ####
 # Utiliser le jeu de données diamonds du paquet ggplot2 pour entraîner un classifier de type CART avec bagging. 
 # Paralléliser l'étape de construction selon les deux paradigmes vus précédemment.
