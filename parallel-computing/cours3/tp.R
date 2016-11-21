@@ -10,11 +10,6 @@ attach(iris)
 #### ex1. #####
 # 2.
 library(MASS)
-leave.one.out2 <- function(i){
-  fit <- lm(Petal.Width~Petal.Length, data=iris[-i,])
-  pred <- predict(fit, data.frame(Petal.Length = iris[i, "Petal.Length"]))
-  return((pred-iris[i, "Petal.Width"])^2)
-}
 
 leave.one.out <- function(i) {
   fit   <- lm(Petal.Width ~ Petal.Length, data = iris[-i, ])
@@ -32,13 +27,13 @@ forLoop <- function(){
   }
 }
 
-
+# 4. use of sapply
 vectorize <- function(){
   Reduce("+", sapply(1:nrow(iris), FUN = function(i) leave.one.out(i)))
 }
 
 
-# 4. Parallelisation
+# 5. Parallelisation with parallel
 #install.packages("parallel")
 library(parallel)
 
@@ -52,16 +47,27 @@ parallel<- function(){
   Reduce("+", res)
 }
 
+#
 
-# parallelization with foreach
+# 6. sequential Foreach
 #install.packages("foreach")
 library(foreach)
+foreachLoopSeq <- function(){
+  foreach(i=1:nrow(iris), .combine = "+") %do% 
+    leave.one.out(i)
+  # if I want a vector with the foreach, I have to do :
+  # vector <- foreach....
+}
+
+# 7. parallel Foreach
+
+
 # install.packages("doParallel")
 library(doParallel)
 
 # IMPORTANT!
 registerDoParallel(cl)
-foreachLoop <- function(){
+foreachLoopPar <- function(){
   foreach(i=1:nrow(iris), .combine = "+") %dopar% 
     leave.one.out(i)
   # if I want a vector with the foreach, I have to do :
@@ -74,7 +80,7 @@ foreachLoop <- function(){
 
 # install.packages("microbenchmark")
 library(microbenchmark)
-compare <- microbenchmark(parallel(), foreachLoop(), vectorize(), forLoop(), times = 10)
+compare <- microbenchmark(parallel(), foreachLoopPar(), foreachLoopSeq(), vectorize(), forLoop(), times = 10)
 # install.packages("ggfortify")
 library(ggfortify)
 autoplot(compare) # Plot benchmark results
@@ -104,3 +110,25 @@ res <- parLapply(cl,1:2000, fun = function(i) {
                                 })
 
 stopCluster(cl)
+
+#### ex. 3 ####
+# Utiliser le jeu de données diamonds du paquet ggplot2 pour entraîner un classifier de type CART avec bagging. 
+# Paralléliser l'étape de construction selon les deux paradigmes vus précédemment.
+
+# Loading data
+library("ggplot2")
+data(diamonds)
+attach(diamonds)
+# We suppose we want to classify the diamonds on CUT
+dim(diamonds)
+summary(diamonds)
+# install.packages("tree")
+library(randomForest)
+train <- sample(1:nrow(diamonds), round(nrow(diamonds) * 2/3))
+tree.bag.diamonds <- randomForest(cut~., data = diamonds, subset = train, mtry = (ncol(diamonds) -1), importance=TRUE)
+summary(tree.bag.diamonds)
+pred.bag.diamonds <- predict(tree.bag.diamonds, newdata = diamonds[-train,])
+
+idx_cut <- which(colnames(diamonds)=="cut")
+reality <- as.matrix(diamonds[-train,idx_cut])
+table(reality, pred.bag.diamonds)
