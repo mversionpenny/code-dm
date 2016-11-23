@@ -86,8 +86,31 @@ model <- model.matrix(~.+0, data=data)
 dim(model)
 
 #### Subset selection ####
-regfit.full <- regsubsets(cartevpr~., model, nvmax=20)
-summary(regfit.full)
+regfit.full <- regsubsets(cartevpr~., data, nvmax=20, method="forward")
+reg.summary <- summary(regfit.full)
+plot(reg.summary$rss, xlab="Number of Variables", ylab="RSS", type="l")
+
+
+train <- sample(c(TRUE, FALSE), nrow(data), rep=TRUE)
+test <- (!train)
+
+regfit.best <- regsubsets(cartevpr~., data=data[train,], nvmax=20, method="forward")
+
+# building a model matrix from the test data /!\ remmember model.matrix!
+test.mat <- model.matrix(cartevpr~., data=data[test,])
+
+val.errors <- rep(NA,19)
+for(i in 1:19){
+  coefi <- coef(regfit.best, i)
+  # %*% = matricial product!!
+  pred <- test.mat[,names(coefi)] %*% coefi
+  val.errors[i] <- mean((data$cartevpr[test] - pred)^2)
+}
+val.errors
+idx <- which.min(val.errors) # answer = 10
+coef(regfit.best,10)
+
+
 
 #### Applying PCA ####
 # problem, some of features are not numeric: sitfamil, csp, codeqlt
@@ -100,6 +123,6 @@ data.cartevpr <- data[, idx_cartevpr]
 # advisable, but default is FALSE. 
 ir.pca <- prcomp(log.ir,
                  center = TRUE,
-                 scale. = TRUE) 
+                 scale. = TRUE)  
 
 
