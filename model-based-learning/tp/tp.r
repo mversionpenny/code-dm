@@ -34,6 +34,18 @@ data <- data[,-c(idx_sexe,idx_cartevp)]
 model <- model.matrix(~.+0, data=data)
 dim(model) # still 210 --> too much
 
+#we note mtbon and nbbon is zero for everyone but the 2d ind.
+which(data$mtbon!=0)
+which(data$nbbon!=0)
+idx_mtbon <- which(colnames(data)=="mtbon")
+idx_nbbon <- which(colnames(data)=="nbbon")
+data <- data[,-c(idx_mtbon, idx_nbbon)]
+
+# idem fr mteparte an nbeparte
+idx_nbeparte <- which(colnames(data)=="nbeparte")
+idx_mteparte <- which(colnames(data)=="mteparte")
+data <- data[,-c(idx_mteparte, idx_nbeparte)]
+
 # We note that nbimpaye is always 0
 sum(which(data$nbimpaye !=0))
 # se can delete this column
@@ -85,44 +97,62 @@ data <- data[,-c(idx_departem)]
 model <- model.matrix(~.+0, data=data)
 dim(model)
 
-#### Subset selection ####
-regfit.full <- regsubsets(cartevpr~., data, nvmax=20, method="forward")
-reg.summary <- summary(regfit.full)
-plot(reg.summary$rss, xlab="Number of Variables", ylab="RSS", type="l")
-
-
-train <- sample(c(TRUE, FALSE), nrow(data), rep=TRUE)
-test <- (!train)
-
-regfit.best <- regsubsets(cartevpr~., data=data[train,], nvmax=20, method="forward")
-
-# building a model matrix from the test data /!\ remmember model.matrix!
-test.mat <- model.matrix(cartevpr~., data=data[test,])
-
-val.errors <- rep(NA,19)
-for(i in 1:19){
-  coefi <- coef(regfit.best, i)
-  # %*% = matricial product!!
-  pred <- test.mat[,names(coefi)] %*% coefi
-  val.errors[i] <- mean((data$cartevpr[test] - pred)^2)
-}
-val.errors
-idx <- which.min(val.errors) # answer = 10
-coef(regfit.best,10)
-
 
 
 #### Applying PCA ####
+data <- data[-2,]
 # problem, some of features are not numeric: sitfamil, csp, codeqlt
 # we change data 
 idx_cartevpr <- which(colnames(data)=="cartevpr")
-log.data <- log(data[,-c(idx_cartevpr)])
-data.cartevpr <- data[, idx_cartevpr]
+data.x <- data[,-c(idx_cartevpr)]
+data.Y <- data[, idx_cartevpr]
 
 # apply PCA - scale. = TRUE is highly 
 # advisable, but default is FALSE. 
-ir.pca <- prcomp(log.ir,
-                 center = TRUE,
-                 scale. = TRUE)  
+model <- model.matrix(~.+0, data=data.x)
+data.pca <- prcomp(model, center = TRUE, scale. = TRUE)  
+plot(data.pca, type="l")
+summary(data.pca)
 
+
+# we choose the 10 first components # /!\ better touse PCAmix
+pData <- scale(model, data.pca$center, data.pca$scale) %*% data.pca$rotation[,1:10]
+# we make a sample so that data is not sorted
+sample <- sample(1:nrow(pData),nrow(pData))
+pData <- pData[sample,]
+data.Y <- data.Y[sample]
+test_idx <- 1:round(nrow(pData)/3)
+train.X <- pData[-test_idx,]
+test.X <- pData[test_idx,]
+train.Y <-data.Y[-test_idx]
+test.Y <- data.Y[test_idx]
+
+data.mclustDA <- MclustDA(as.matrix(train.X), train.Y, modelType="EDDA", modelNames="EEE")
+summary(data.mclustDA, parameters=TRUE)
+summary(data.mclustDA, newdata = test.X, newclass = test.Y)
+prediction <- predict(data.mclustDA, test.X)
+# to have the probabilities
+prediction$z
+
+table(test.Y,prediction$classification)
+
+BIC <- mclustBIC(model) # takes a lot of time
+plot(BIC) 
+summary(BIC)
+
+#### plotting PCA ####
+library(devtools)
+install_github("ggbiplot", "vqv")
+
+data.Y.plot <- rep("F",length(data.Y))
+data.Y.plot[which(data.Y!=0)] <- "T"
+
+library(ggbiplot)
+g <- ggbiplot(data.pca, obs.scale = 1, var.scale = 1, 
+              groups = data.Y.plot, ellipse = TRUE, 
+              circle = TRUE)
+g <- g + scale_color_discrete(name = '')
+g <- g + theme(legend.direction = 'horizontal', 
+               legend.position = 'top')
+print(g)
 
