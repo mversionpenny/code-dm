@@ -67,3 +67,5 @@ clusterExport(cl, list("seeds"))
 clusterEvalQ(cl, library(MASS))
 par.res <- parLapply(cl, 1:2, fun = do.kmeans)
 stopCluster(cl)
+
+
