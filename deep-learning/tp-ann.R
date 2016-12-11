@@ -25,6 +25,6 @@ error <- sum(error)
 
 # computing deltaW
 lambda <- 0.1
-deltaW <- lambda * t(X) %*% rowSums(true-matresult) 
+deltaW <- lambda * t(X) %*% (true-matresult)
 deltaW
 W <- W +deltaW
