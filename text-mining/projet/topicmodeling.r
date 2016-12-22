@@ -5,10 +5,12 @@ library(mallet)
 
 # Reading the data file
 
-Sys.setenv(JAVA_HOME='C:\\Program Files (x86)\\Java\\jre1.8.0_112')
+Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_111')
 setwd("D:/master-DM/cours/text-mining/projet/")
 hp <- readLines(".//les_rois_maudits//txt//[Rois Maudits-1] Le Roi de fer - Druon,Maurice.txt", encoding="UTF-8")
 hp <- hp[!(is.na(hp) | hp=="")]
+f <-  function(x) return(gsub("\u2019"," ",x))
+hp <- sapply(hp,f,USE.NAMES = FALSE)
 lda.id <- 1:length(hp)
 
 # setting the delimiters
@@ -25,7 +27,7 @@ mallet.instances <- mallet.import(as.character(lda.id), hp, stoplist, token.rege
 # Estimation of LDA parameters
 
 # number of expected topics
-k <- 100
+k <- 20
 
 # preparation
 topic.model <- MalletLDA(num.topics=k)
@@ -88,9 +90,10 @@ pd.z <- t(num.pdz) * (1/pz) # the last term is optional, doesn't change the rank
 
 # First, get the list of words from your new document.
 
-ch <- "Harry lives number four private drive under the stairs."
-ch <- "He likes playing quidditch and chasing the golden snitch."
-ch <- "Harry lives number four private drive under the stairs. He likes playing quidditch and chasing the golden snitch."
+# ch <- "Harry lives number four private drive under the stairs."
+# ch <- "He likes playing quidditch and chasing the golden snitch."
+# ch <- "Harry lives number four private drive under the stairs. He likes playing quidditch and chasing the golden snitch."
+ch <- "Les rois maudits sont l'histoire de France au moyen-age"
 ch.processed <- unlist(strsplit(tolower(ch), "[^[:alpha:]]"))
 
 index.w <- match(ch.processed,vocabulary)
@@ -106,7 +109,7 @@ pz.newdoc <- function(z)
   return(2^(sum(log2(topic.words[z,index.w])))*pz[z])
 }
 
-pz.ch <- sapply(1:100, pz.newdoc)
+pz.ch <- sapply(1:k, pz.newdoc)
 pz.ch <- pz.ch / sum(pz.ch)
 
 message("Top topics:")
@@ -114,5 +117,5 @@ print(order(pz.ch, decreasing=T)[1:10])
 message("p(z/d):")
 sprintf("%.3f",sort(pz.ch, decreasing=T)[1:10])
 
-mallet.top.words(topic.model, topic.words[68,])
+mallet.top.words(topic.model, topic.words[10,])
 

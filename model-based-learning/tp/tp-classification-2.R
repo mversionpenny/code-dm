@@ -65,6 +65,15 @@ show_digit(train$x[numero,],title=train$y[numero])
 library(mclust)
 # begin with just a few (because it's very long)
 mclustda <- MclustDA(train$x[1:1000,], train$y[1:1000], modelType="EDDA", modelNames="VII")
-mclustda <- MclustDA(train$x, train$y, modelType="EDDA", modelNames="EEE")
+# mclustda <- MclustDA(train$x, train$y, modelType="EDDA", modelNames="EEE")
+library(HDclassif)
+prms <- hdda(train$x[1:10000,], train$y[1:10000], model="all")
+resTrain <- predict(prms, train$x[1:10000,], train$y[1:10000])
+resTest <- predict(prms, test$x[1:1000,], test$y[1:1000])
 
-
+#### tests coclustering ####
+library(blockcluster)
+data(binarydata)
+out<-coclusterBinary(binarydata,nbcocluster=c(2,3))
+summary(out)
+plot(out)
