@@ -7,10 +7,10 @@ library(mallet)
 
 Sys.setenv(JAVA_HOME='C:\\Program Files\\Java\\jre1.8.0_111')
 setwd("D:/master-DM/cours/text-mining/projet/")
-hp <- readLines(".//les_rois_maudits//txt//[Rois Maudits-1] Le Roi de fer - Druon,Maurice.txt", encoding="UTF-8")
+hp <- readLines(".//les_rois_maudits//txt//rois_maudits.txt", encoding="UTF-8")
 hp <- hp[!(is.na(hp) | hp=="")]
-f <-  function(x) return(gsub("\u2019"," ",x))
-hp <- sapply(hp,f,USE.NAMES = FALSE)
+# f <-  function(x) return(gsub("\u2019"," ",x))
+# hp <- sapply(hp,f,USE.NAMES = FALSE)
 lda.id <- 1:length(hp)
 
 # setting the delimiters
@@ -93,7 +93,7 @@ pd.z <- t(num.pdz) * (1/pz) # the last term is optional, doesn't change the rank
 # ch <- "Harry lives number four private drive under the stairs."
 # ch <- "He likes playing quidditch and chasing the golden snitch."
 # ch <- "Harry lives number four private drive under the stairs. He likes playing quidditch and chasing the golden snitch."
-ch <- "Les rois maudits sont l'histoire de France au moyen-age"
+ch <- "Philippe le Bel"
 ch.processed <- unlist(strsplit(tolower(ch), "[^[:alpha:]]"))
 
 index.w <- match(ch.processed,vocabulary)
@@ -117,5 +117,5 @@ print(order(pz.ch, decreasing=T)[1:10])
 message("p(z/d):")
 sprintf("%.3f",sort(pz.ch, decreasing=T)[1:10])
 
-mallet.top.words(topic.model, topic.words[10,])
+mallet.top.words(topic.model, topic.words[9,])
 
