@@ -1,0 +1,14 @@
+3 janvier :
+- checker poly-arbre
+- refaire exo avec pi et lambda messages
+- revoir partie fi psi : fin vers ~50mn de video part2
+
+10 janvier:
+voir le truc comme une maladie et des symptomes
+part 2: revoir de 30min a 40min
+part 3: try to do the example 52mn with inference message passing
+regarder test du qi 2
+
+17 janvier:
+reseaux bayesiens dynamiques
+reseaux bayésiens relationnels

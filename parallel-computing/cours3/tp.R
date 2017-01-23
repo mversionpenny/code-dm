@@ -114,12 +114,12 @@ stopCluster(cl)
 # /!\ Not ok because of seeds :S --> see seeds handling in correction
 
 #### ex. 3 ####
-# Utiliser le jeu de données diamonds du paquet ggplot2 pour entraîner un classifier de type CART avec bagging. 
-# Paralléliser l'étape de construction selon les deux paradigmes vus précédemment.
+# Utiliser le jeu de donnÃ©es diamonds du paquet ggplot2 pour entraÃ®ner un classifier de type CART avec bagging. 
+# ParallÃ©liser l'Ã©tape de construction selon les deux paradigmes vus prÃ©cÃ©demment.
 
 # Loading data
 library("ggplot2")
-data(diamonds)
+data(diamonds) 
 attach(diamonds)
 # We suppose we want to classify the diamonds on CUT
 dim(diamonds)
