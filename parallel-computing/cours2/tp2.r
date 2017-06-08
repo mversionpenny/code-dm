@@ -68,4 +68,5 @@ joe=function(x,k){
 #test
 X <- c(0,0,1,1,1,1,1,0,0,1,1,0,0,1,1)
 #expected values for k=2: 3,4,5,6,10,14
-
+debug(joe)
+undebug(joe)

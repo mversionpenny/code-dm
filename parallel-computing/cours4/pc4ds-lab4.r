@@ -77,7 +77,7 @@ mutoutparD <- function(cls, lnks) {
   nr <- nrow(lnks) # lnks global at worker
   clusterExport(cls, "lnks")
   
-  sample <- sample(1:499,499)
+  sample <- sample(1:(nr-1),(nr-1))
   ichunks <- clusterSplit(cls,sample) # each "chunk" has only 1 value of i , for now
   tots <- clusterApply(cls, ichunks, doichunk)
   
@@ -152,18 +152,53 @@ simuData <- function(sizes){
 }
 
 
-library(parallel)
+library(doParallel)
+library(foreach)
 
 
 # Situation 1 
 multiple.iris <- simuData(rep(200, 8))
+#1. ordonnancement statique :
+cl <- makeCluster(4)
+clusterExport(cl = cl, list("leave.one.out"))
+list <- c(1:200, 1:200, 1:200, 1:200)
+ichunks <- clusterSplit(cl,list) 
+
+
+tots <- clusterApply(cl, multiple.iris, fun=compute.PRESS)
+
+
+tots <- clusterApplyLB(cl, multiple.iris, fun=compute.PRESS)
+
+library(microbenchmark)
+compare <- microbenchmark(
+  clusterApply(cl, multiple.iris, fun=compute.PRESS),
+  clusterApplyLB(cl, multiple.iris, fun=compute.PRESS),
+  times=10
+)
+library(ggfortify)
+autoplot(compare)
+
+registerDoParallel(cl)
+petit.foreach <- function(){
+  foreach(i=1:length(multiple.iris), .combine = c) %do%{
+    foreach(j=1:nrow(multiple.iris[[i]]), .combine = "+", 
+            .export = c("leave.one.out", "multiple.iris")) %dopar%
+      leave.one.out(j, multiple.iris[[i]])}
+}
+grand.foreach <- function(){
+  foreach(i=1:length(multiple.iris),  .export = c("leave.one.out", 
+              "multiple.iris"), .combine = c, .packages = "foreach") %dopar%{
+    foreach(j=1:nrow(multiple.iris[[i]]), .combine = "+", 
+           .packages = "foreach") %do%
+      leave.one.out(j, multiple.iris[[i]])}
+}
+compare <- microbenchmark(
+  petit.foreach(),
+  grand.foreach(),
+  times=3
+)
 
 
 stopCluster(cl)
 
-# foreach parallel
-library(foreach)    # provides foreach
-library(doParallel) # provides %dopar%
-registerDoParallel(cores = 4) 
-...
-stopCluster(cl)

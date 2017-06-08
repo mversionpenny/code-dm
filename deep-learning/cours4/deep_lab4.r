@@ -6,7 +6,9 @@
 ## #############################################################################
 ##                      Ex. 1                                               ####
 ## #############################################################################
-
+rm(list=ls())
+this.dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+setwd(this.dir)
 # install.packages("autoencoder")
 library(autoencoder)
 
@@ -96,8 +98,8 @@ library(h2o)
 localH2O <- h2o.init(nthreads = -1)
 
 fit <- h2o.deeplearning(x = 1:100,
-                        training_frame = training.matrix,
-                        hidden = ... ,
+                        training_frame = as.h2o(training.matrix),
+                        hidden = c(400, 200, 2, 200, 400 ) ,
                         epochs = 600,
                         activation = 'Tanh',
                         autoencoder = TRUE)
@@ -108,9 +110,9 @@ fit <- h2o.deeplearning(x = 1:100,
 ##                  Ex. 3 Real data example                                 ####
 ## #############################################################################
 
-setwd("D:\\master-DM\\cours\\deep-learning\\cours4\\minimnist")
-MNIST_DIGITStrain <- read.table("data.txt", header = FALSE)
-MNIST_DIGITSlabel <- read.table("labels.txt", header = FALSE)$V1
+
+MNIST_DIGITStrain <- read.table("minimnist/data.txt", header = FALSE)
+MNIST_DIGITSlabel <- read.table("minimnist/labels.txt", header = FALSE)$V1
 # library(readr)  ## much faster !!!!
 # MNIST_DIGITStrain <- read_delim('data.txt', " ", col_names = FALSE,)
 
@@ -124,7 +126,7 @@ for(i in 1:100){
 
 
 library(h2o)
-h2o.init(nthreads = 2)
+h2o.init(nthreads = 8)
 MDIG <- h2o.importFile(path = "D:\\master-DM\\cours\\deep-learning\\cours4\\minimnist\\data.txt", sep = ' ')
 
 # Show the data objects on the H2O platform

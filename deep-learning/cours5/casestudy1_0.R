@@ -99,6 +99,8 @@ m2c <- h2o.deeplearning(
   l2 = 0
 )
 
+train_supervised_feature = h2o.deepfeatures(m2c, h2odigits.train, layer=2)
+
 
 m1
 m2a
